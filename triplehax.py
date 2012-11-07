@@ -1,5 +1,3 @@
-import sys
-
 pieces = [1,2,3,4,5,6,7]
 piecenames = ['grass','bush','tree','hut','house','mansion','castle']
 def getinput():
@@ -74,7 +72,9 @@ def checkpieces(pos):
     lastpiece = board[y][x]
     
     return
-def search(direction,
+def search(direction,pos):
+
+    return
 def help():
     'show instructions'
     print("Input 'L' for a list of pieces.")
