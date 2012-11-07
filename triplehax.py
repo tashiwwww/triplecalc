@@ -20,6 +20,9 @@ def getinput():
             if int(key) in pieces:
                 print("You chose: " + piecenames[int(key)-1])
                 loc = input("Input coordinates: ")
+                if loc == 'Q' or loc == 'q':
+                    print("gg")
+                    return
                 pos = posparse(loc)
                 if pos != False:
                     placepiece(int(key),pos)
@@ -70,10 +73,12 @@ def checkpieces(pos):
     x = pos[0]
     y = pos[1]
     lastpiece = board[y][x]
-    
+    for direction in ['n','e','s','w']:
+        search(lastpiece,direction,x,y)
     return
-def search(direction,pos):
-
+def search(piece,direction,x,y):
+    'search adjacent squares for matching pieces'
+    
     return
 def help():
     'show instructions'
