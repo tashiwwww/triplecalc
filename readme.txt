@@ -1,0 +1,1 @@
+Command Line Python simulator for TripleTown. Eventual intention is to have it solve boards for high scores with play by play instructions.
