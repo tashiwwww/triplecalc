@@ -1,5 +1,8 @@
 pieces = [1,2,3,4,5,6,7]
+width = 7
+height = 7
 piecenames = ['grass','bush','tree','hut','house','mansion','castle']
+
 def getinput():
     'Get user input and do stuff'
     key = input("Enter a number or 'H' for help: ")
@@ -25,9 +28,9 @@ def getinput():
                     return
                 pos = posparse(loc)
                 if pos != False:
-                    placepiece(int(key),pos)
-                    checkpieces(pos)
-                    showboard(board)
+                    if placepiece(int(key),pos):
+                        checkpieces(pos)
+                        showboard(board)
                 getinput()
         except ValueError:
             print("I don't know what you're doing. Try again")
@@ -53,7 +56,7 @@ def placepiece(piece,pos):
         print("There's already a piece there.")
         return False
     board[y][x] = piece
-    return
+    return True
 
 def posparse(pos):
     'parse A5 into 1, -3 or whatever'
@@ -73,17 +76,29 @@ def checkpieces(pos):
     x = pos[0]
     y = pos[1]
     lastpiece = board[y][x]
-    for direction in ['n','e','s','w']:
-        search(lastpiece,direction,x,y)
-    return
-def search(piece,direction,x,y):
+    search(lastpiece,[y,x])
+    return True
+def search(piece,pos,skip=False,matched=1):
     'search adjacent squares for matching pieces'
-    
-    return
+    dirs = ['n','e','s','w']
+    dirnum = [[-1,0],[0,1],[1,0],[0,-1]]
+    for i in dirs:
+        if dirs.index(i) != skip:
+            shift = dirnum[dirs.index(i)]
+            adjacent = [sum(pair) for pair in zip(pos,shift)]
+            y = adjacent[0]
+            x = adjacent[1]
+            if y < 0 and y > -height and x >= 0 and x < width and board[y][x] == piece:
+                matched += 1
+                print(i,matched,adjacent)
+                search(piece,adjacent,dirs.index(i)-2,matched)
+                return matched
+    return False
 def help():
     'show instructions'
     print("Input 'L' for a list of pieces.")
     print("'S' to show the board")
+    print("'Q' quits")
     print("Input a number to place a piece. After that, you will be prompted for the coordinates. Starting from the bottom left corner, use letters across and numbers going up. For example, B2 is the 2nd column, second row from the bottom left.")
     return
 def newboard(x = 7,y = 7):
@@ -99,7 +114,7 @@ def showboard(board):
         print(row)
     return
 
-board = newboard()
+board = newboard(width,height)
 showboard(board)
 getinput()
 
