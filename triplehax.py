@@ -78,22 +78,24 @@ def checkpieces(pos):
     lastpiece = board[y][x]
     search(lastpiece,[y,x])
     return True
-def search(piece,pos,skip=False,matched=1):
+def search(piece,pos,skip=False,matched=1,hits=[]):
     'search adjacent squares for matching pieces'
+
     dirs = ['n','e','s','w']
     dirnum = [[-1,0],[0,1],[1,0],[0,-1]]
     for i in dirs:
-        if dirs.index(i) != skip:
+        if i != dirs[skip] or skip is False:
             shift = dirnum[dirs.index(i)]
             adjacent = [sum(pair) for pair in zip(pos,shift)]
             y = adjacent[0]
             x = adjacent[1]
             if y < 0 and y > -height and x >= 0 and x < width and board[y][x] == piece:
                 matched += 1
+                hits.append(adjacent)
                 print(i,matched,adjacent)
-                search(piece,adjacent,dirs.index(i)-2,matched)
-                return matched
-    return False
+                search(piece,adjacent,dirs.index(i)-2,matched,hits)
+    print(hits)
+    return matched
 def help():
     'show instructions'
     print("Input 'L' for a list of pieces.")
