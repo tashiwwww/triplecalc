@@ -80,7 +80,8 @@ def checkpieces(pos):
     return True
 def search(piece,pos,skip=False,matched=1,hits=[]):
     'search adjacent squares for matching pieces'
-
+    if pos not in hits:
+        hits.append(pos)
     dirs = ['n','e','s','w']
     dirnum = [[-1,0],[0,1],[1,0],[0,-1]]
     for i in dirs:
@@ -91,9 +92,21 @@ def search(piece,pos,skip=False,matched=1,hits=[]):
             x = adjacent[1]
             if y < 0 and y > -height and x >= 0 and x < width and board[y][x] == piece:
                 matched += 1
-                hits.append(adjacent)
+                if adjacent not in hits:
+                    hits.append(adjacent)
                 print(i,matched,adjacent)
                 search(piece,adjacent,dirs.index(i)-2,matched,hits)
+    if matched >= 3:
+        matched = 0
+        for square in hits:
+            x = square[1]
+            y = square[0]
+            board[y][x] = 0
+        if len(hits) > 0:
+            board[hits[-1][0]][hits[-1][1]] = piece+1
+            if search(piece+1,[hits[-1][0],hits[-1][1]]) >= 3:
+                board[hits[-1][0]][hits[-1][1]] = piece+2
+        del hits[:]
     print(hits)
     return matched
 def help():
